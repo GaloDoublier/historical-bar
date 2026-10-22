@@ -2,7 +2,7 @@
 
 A frontend for creating historical characters and meeting them in a quiet, rustic western bar.
 
-**Current milestone: 0 — bootstrap and context handoff.** The project has three navigable placeholder pages. Character creation, persistence, the puppet modal, the bar scene, chat and voice are not implemented yet. Backend, LLM and RAG integration are outside the current scope.
+**Current iteration: integrated photo-puppet prototype.** Character creation, manual facial regions, IndexedDB persistence, mock chat and audio-RMS jaw animation are implemented. The existing home is preserved, with its saved-character action connected. See [prototype usage, verification and limitations](docs/development/puppet-prototype-delivery.md). Backend, LLM and RAG remain excluded. The bootstrap notes below describe the original milestone and are retained as historical context.
 
 ## Getting started
 
