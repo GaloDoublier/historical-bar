@@ -2,7 +2,7 @@
 
 A frontend for creating historical characters and meeting them in a quiet, rustic western bar.
 
-**Current progress: bootstrap complete; milestone 1 main menu implemented.** The entry screen has a rustic western scene, local display typography and accessible new/load actions. Character creation and the conversation room remain navigable placeholders. Persistence, the character picker, the puppet modal, the conversation scene, chat and voice belong to later work. Backend, LLM and RAG integration are outside the current scope.
+**Current iteration: integrated photo-puppet prototype with the rustic main menu.** Create and edit characters, align facial regions in an embedded modal, save portraits and rigs in IndexedDB, and open a local mock conversation with audio-driven jaw movement, blinking and eyebrow expressions. The merged menu keeps its video, typography, assets and cursor; Cargar conversación opens the saved-character list. See [prototype usage, verification and limitations](docs/development/puppet-prototype-delivery.md). Backend, LLM and RAG remain excluded.
 
 ## Getting started
 
@@ -35,11 +35,11 @@ The menu displays the version from `package.json`, starting at **1.0.0**. Keep i
 
 | Route | Current behavior |
 | --- | --- |
-| `/` | Rustic main menu; title, subtitle, new-character link and unavailable load action; its explanation appears on hover, focus or activation |
-| `/characters/new` | Creator placeholder; links to the sample room |
-| `/chat/[characterId]` | Room placeholder displaying the requested identifier; links back to creation |
+| `/` | Rustic video menu with new-character navigation and a collapsible saved-character list; empty/loading/error states explain unavailable loading |
+| `/characters/new` | Character form with portrait upload, embedded puppet editor, optional source metadata and local saving; `?edit=id` edits an existing character |
+| `/chat/[characterId]` | Saved portrait in the bar, mock messages, facial expressions and audio tests; missing identifiers offer character creation |
 
-Use the creator's sample-room link or `/chat/demo` to explore the room. This sample identifier does not represent a saved character; any identifier currently shows a placeholder. The menu has exactly two primary actions. Loading stays disabled because the local save flow and picker belong to milestone 2; there are no seeded or pretend saved characters.
+The menu has exactly two primary actions. Loading becomes available when characters exist in this browser. `/chat/demo` and unknown IDs show an invitation to create a character; no sample character is seeded.
 
 ## Project structure
 
@@ -81,8 +81,10 @@ src/
     characters/main-menu.tsx
     characters/main-menu.module.css
     characters/load-character-button.tsx
-    characters/new-character-placeholder.tsx
-    chat/conversation-placeholder.tsx
+    characters/character-form.tsx
+    characters/storage.ts
+    chat/conversation-room.tsx
+    puppet/                    (editor, renderer, rig, expressions and audio)
 .gitignore
 eslint.config.mjs
 next.config.ts
@@ -92,7 +94,7 @@ package-lock.json
 tsconfig.json
 ```
 
-Create `features/puppet/`, `lib/` or `types/` when they have actual contents and consumers. The puppet editor will be a **modal inside character creation**, not another route.
+The puppet editor is a **modal inside character creation**, not another route.
 
 ## Dependencies
 
@@ -140,7 +142,7 @@ Bootstrap verification on 2026-10-15:
 
 The initial dependency audit reports five high-severity development dependency entries stemming from one [`braces` advisory](https://github.com/advisories/GHSA-vfj7-8cjw-p6xm) through the Next.js ESLint plugin. The suggested automatic fix downgrades `eslint-config-next` to 14.2.35, which does not match this project. The generated dependency versions are retained; check future upstream fixes with `npm audit`. Do not apply `npm audit fix --force` blindly. `npm audit --omit=dev` reports **zero production vulnerabilities** at bootstrap.
 
-No automated behavior test framework is installed. There is no saved data, portrait processing, animation, actual conversation or source ingestion. No deployment or push is part of this work.
+The tables above record historical bootstrap checks. Current prototype tests run with `npm test` (Node 22.18+ or 24); see the prototype delivery notes for verification and limitations. There is no backend, LLM, RAG or source ingestion.
 
 Main-menu verification on 2026-10-15:
 
@@ -151,6 +153,8 @@ Main-menu verification on 2026-10-15:
 - The menu remains a Server Component; a small client component handles the load explanation. The load control uses `aria-disabled` so it remains focusable and can explain its unavailable state without navigating.
 - The initial menu was checked in development and production, including new-character navigation without JavaScript. The revised menu passes development browser checks with no console warnings or errors; showing the explanation requires JavaScript.
 
-## Next implementation step
+## Current scope
 
-Continue **milestone 1 — visual skeleton and navigation** from the [frontend plan](docs/development/frontend-implementation-plan.md) when requested: the basic character form with an embedded modal placeholder and the conversation scene placeholder. The main menu is implemented; milestone 2 will connect its load action to local persistence and the saved-character picker. Keep the work frontend-only.
+See the [PR overview, testing steps and screenshot gallery](docs/development/photo-puppet-chat-pr.md) for the integrated prototype.
+
+This PR integrates the existing menu and photo-puppet prototype. Further milestones require a separate request. Character data stays in this browser; source files retain metadata only, audio is independent from mock text, and skin reconstruction can show seams. See [prototype delivery notes](docs/development/puppet-prototype-delivery.md).

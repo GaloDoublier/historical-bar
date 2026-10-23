@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { ConversationPlaceholder } from "@/features/chat/conversation-placeholder";
+import { ConversationRoom } from "@/features/chat/conversation-room";
 
 export const metadata: Metadata = { title: "Sala de conversación" };
 
@@ -12,5 +12,5 @@ export default async function ConversationPage({
 }: ConversationPageProps) {
   const { characterId } = await params;
 
-  return <ConversationPlaceholder characterId={characterId} />;
+  return <ConversationRoom characterId={characterId} />;
 }

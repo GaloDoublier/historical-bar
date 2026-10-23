@@ -168,6 +168,34 @@
   text-shadow: 0 2px 4px #100b06, 0 0 12px #100b06;
 }
 
+.loadCharacter[aria-disabled="false"] {
+  color: #eddbb8;
+}
+
+.loadCharacter[aria-disabled="false"]::before {
+  filter: drop-shadow(0 6px 5px rgb(0 0 0 / 60%));
+}
+
+.savedCharacters {
+  max-height: 240px;
+  overflow-y: auto;
+  margin-top: 16px;
+  border: 1px solid #68513b;
+  padding: 16px 22px;
+  background: rgb(24 17 11 / 94%);
+  list-style: none;
+}
+
+.savedCharacters li + li {
+  margin-top: 14px;
+}
+
+.savedCharacters a {
+  display: block;
+  padding: 6px 0;
+  overflow-wrap: anywhere;
+}
+
 .version {
   position: absolute;
   right: clamp(28px, 4vw, 64px);
