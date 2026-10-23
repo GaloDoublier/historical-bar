@@ -9,6 +9,7 @@ export const metadata: Metadata = {
   },
   description:
     "Un bar tranquilo donde encontrarte con personajes de la historia.",
+  icons: { icon: "/assets/favicon.svg" },
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {

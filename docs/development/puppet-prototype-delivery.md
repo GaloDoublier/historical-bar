@@ -1,5 +1,11 @@
 # Prototipo integrado de puppet — 2026-10-21
 
+## Integración con el menú — 2026-10-23
+
+Se integró `main` tras el merge del menú (PR #1), conservando video, tipografía, tablones, cursor y versión. La ruta de inicio usa `MainMenu`; `Cargar conversación` consulta IndexedDB y despliega los personajes guardados. Si no existen, está cargando o falla la lectura, conserva una explicación accesible. El selector anterior de la portada provisional fue reemplazado por esta integración.
+
+Lint, typecheck, build y los 10 tests del prototipo pasan. El navegador verificó estado vacío, carga de foto/modal, edición y guardado de una fixture aislada, chat mock, selección desde el menú, persistencia al recargar, ID inexistente y menú móvil sin desborde a 390 px. Ver [capturas actuales y condiciones de prueba](screenshots/photo-puppet-chat/README.md).
+
 ## Cómo probarlo
 
 Con `npm run dev`, abrir http://localhost:3000 → Nuevo personaje → nombre y foto → modal → confirmar → guardar y abrir conversación. Usar un retrato frontal limpio, con boca cerrada y mentón completo.

@@ -2,7 +2,7 @@
 
 A frontend for creating historical characters and meeting them in a quiet, rustic western bar.
 
-**Current iteration: integrated photo-puppet prototype.** Character creation, manual facial regions, IndexedDB persistence, mock chat and audio-RMS jaw animation are implemented. The existing home is preserved, with its saved-character action connected. See [prototype usage, verification and limitations](docs/development/puppet-prototype-delivery.md). Backend, LLM and RAG remain excluded. The bootstrap notes below describe the original milestone and are retained as historical context.
+**Current iteration: integrated photo-puppet prototype with the rustic main menu.** Create and edit characters, align facial regions in an embedded modal, save portraits and rigs in IndexedDB, and open a local mock conversation with audio-driven jaw movement, blinking and eyebrow expressions. The merged menu keeps its video, typography, assets and cursor; Cargar conversación opens the saved-character list. See [prototype usage, verification and limitations](docs/development/puppet-prototype-delivery.md). Backend, LLM and RAG remain excluded.
 
 ## Getting started
 
@@ -19,6 +19,8 @@ The app was initialized directly in this repository using [create-next-app](http
 
 ## Commands
 
+The menu displays the version from `package.json`, starting at **1.0.0**. Keep its root version synchronized with `package-lock.json` when changing releases.
+
 | Command | Purpose |
 | --- | --- |
 | `npm run dev` | Start the local development server |
@@ -33,11 +35,11 @@ The app was initialized directly in this repository using [create-next-app](http
 
 | Route | Current behavior |
 | --- | --- |
-| `/` | Main menu; new-character link, disabled continue action and sample-room link |
-| `/characters/new` | Creator placeholder; links to the sample room |
-| `/chat/[characterId]` | Room placeholder displaying the requested identifier; links back to creation |
+| `/` | Rustic video menu with new-character navigation and a collapsible saved-character list; empty/loading/error states explain unavailable loading |
+| `/characters/new` | Character form with portrait upload, embedded puppet editor, optional source metadata and local saving; `?edit=id` edits an existing character |
+| `/chat/[characterId]` | Saved portrait in the bar, mock messages, facial expressions and audio tests; missing identifiers offer character creation |
 
-Use `/chat/demo` to explore navigation. This sample identifier does not represent a saved character; any identifier currently shows a placeholder. Detailed styling and full screen behavior belong to the next milestones.
+The menu has exactly two primary actions. Loading becomes available when characters exist in this browser. `/chat/demo` and unknown IDs show an invitation to create a character; no sample character is seeded.
 
 ## Project structure
 
@@ -49,6 +51,7 @@ docs/
     context-import.md
     frontend-guidelines.md
     frontend-implementation-plan.md
+    main-menu-assets.md
   features/
     main-menu.md
     character-creation.md
@@ -59,6 +62,12 @@ docs/
     README.md
     example-01-cinematic-bar/  (6 PNG references)
     example-02-rustic-bar/     (6 JPEG references; primary)
+public/assets/
+  favicon.svg                (local western monogram)
+  fonts/                     (Rye font and SIL Open Font License)
+  main-menu/night-bar.webp    (dim nocturnal menu background)
+  main-menu/wooden-plank.webp (transparent physical plank cutout)
+  main-menu/worn-ink.svg      (distressed lettering mask)
 src/
   app/
     globals.css
@@ -69,8 +78,13 @@ src/
   components/ui/
     page-shell.tsx
   features/
-    characters/new-character-placeholder.tsx
-    chat/conversation-placeholder.tsx
+    characters/main-menu.tsx
+    characters/main-menu.module.css
+    characters/load-character-button.tsx
+    characters/character-form.tsx
+    characters/storage.ts
+    chat/conversation-room.tsx
+    puppet/                    (editor, renderer, rig, expressions and audio)
 .gitignore
 eslint.config.mjs
 next.config.ts
@@ -80,7 +94,7 @@ package-lock.json
 tsconfig.json
 ```
 
-Create `features/puppet/`, `lib/`, `types/` or `public/assets/` when they have actual contents and consumers. The puppet editor will be a **modal inside character creation**, not another route.
+The puppet editor is a **modal inside character creation**, not another route.
 
 ## Dependencies
 
@@ -99,13 +113,13 @@ Runtime dependencies: **Next.js 16.4.1**, **React 19.3.0** and **React DOM 19.3.
 
 Exact versions are recorded in `package-lock.json`. Strict TypeScript, the Next.js ESLint rules and the `@/*` → `src/*` alias are configured.
 
-The generated template uses the official Tailwind Turbopack integration in `next.config.ts`; no separate PostCSS configuration is needed. Optional component caching and partial prefetching were left disabled to keep bootstrap simple.
+The project uses the official Tailwind Turbopack integration in `next.config.ts`; no separate PostCSS configuration is needed. Its loader targets `globals.css` so CSS Modules retain their scoped class exports. Menu-specific styles live in a CSS Module; other screens keep their existing Tailwind styles. Optional component caching and partial prefetching were left disabled to keep bootstrap simple.
 
 ## Project context and assets
 
 Start with [AGENTS.md](AGENTS.md). The required documents and all twelve visual references were imported from [RAG-proyect-context](https://github.com/GaloDoublier/RAG-proyect-context); see [the import record](docs/development/context-import.md) for the exact source snapshot. No required files are missing.
 
-`example-02-rustic-bar` is the primary reference for later visual work. Example 01 is secondary for poses and actions. Keep design inspiration under `docs/references/`; put assets actually used by the app under `public/assets/`. These reference images are not prepared puppet sprites. The bootstrap uses no image assets.
+`example-02-rustic-bar` is the primary reference: warm hanging lanterns, aged wood and a quiet table. Example 01 is secondary for poses and actions. The menu uses an original generated background, not a copied reference photo. Production assets live under `public/assets/`; design references stay under `docs/references/`. These images are not prepared puppet sprites. See [menu asset provenance and generation prompt](docs/development/main-menu-assets.md). All assets and fonts are served locally.
 
 ## Verification and limitations
 
@@ -128,8 +142,17 @@ Bootstrap verification on 2026-10-15:
 
 The initial dependency audit reports five high-severity development dependency entries stemming from one [`braces` advisory](https://github.com/advisories/GHSA-vfj7-8cjw-p6xm) through the Next.js ESLint plugin. The suggested automatic fix downgrades `eslint-config-next` to 14.2.35, which does not match this project. The generated dependency versions are retained; check future upstream fixes with `npm audit`. Do not apply `npm audit fix --force` blindly. `npm audit --omit=dev` reports **zero production vulnerabilities** at bootstrap.
 
-No automated behavior test framework is installed for these static placeholders. There is no saved data, image processing, animation, actual conversation or source ingestion. No deployment or push is part of bootstrap.
+The tables above record historical bootstrap checks. Current prototype tests run with `npm test` (Node 22.18+ or 24); see the prototype delivery notes for verification and limitations. There is no backend, LLM, RAG or source ingestion.
 
-## Next implementation step
+Main-menu verification on 2026-10-15:
 
-Implement **milestone 1 — visual skeleton and navigation** from the [frontend plan](docs/development/frontend-implementation-plan.md): develop the rustic main menu, basic character form with an embedded modal placeholder and the conversation scene placeholder, using example 02 as the primary reference. Keep the work frontend-only.
+- `npm run lint`, `npm run typecheck` and `npm run build` pass.
+- Browser checks cover the unavailable load action, its initially hidden explanation, hover/focus/click/Enter/Space/touch activation, Escape/blur dismissal, and menu → creator → sample room → menu navigation.
+- Responsive checks cover 320px, 390px, 768px, 844px and 1920px widths, with no horizontal overflow; desktop and mobile screenshots were visually inspected.
+- Reduced-motion preferences disable plank transitions and scaling. Hover/focus gently enlarges each plank; holding a press gives a smaller, lowered response until release. A single western arrow cursor is used everywhere, including links and buttons; it has no star pointer variant. These states and the version display were checked in the browser.
+- The menu remains a Server Component; a small client component handles the load explanation. The load control uses `aria-disabled` so it remains focusable and can explain its unavailable state without navigating.
+- The initial menu was checked in development and production, including new-character navigation without JavaScript. The revised menu passes development browser checks with no console warnings or errors; showing the explanation requires JavaScript.
+
+## Current scope
+
+This PR integrates the existing menu and photo-puppet prototype. Further milestones require a separate request. Character data stays in this browser; source files retain metadata only, audio is independent from mock text, and skin reconstruction can show seams. See [prototype delivery notes](docs/development/puppet-prototype-delivery.md).

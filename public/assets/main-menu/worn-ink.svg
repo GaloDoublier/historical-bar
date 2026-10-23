@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="240" height="160" viewBox="0 0 240 160">
+  <filter id="wear" x="0" y="0" width="100%" height="100%">
+    <feTurbulence type="fractalNoise" baseFrequency=".65 .4" numOctaves="3" seed="12"/>
+    <feColorMatrix type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  1.8 0 0 0 -.3"/>
+    <feComponentTransfer>
+      <feFuncA type="discrete" tableValues=".55 .78 .94 1 1"/>
+    </feComponentTransfer>
+  </filter>
+  <path fill="white" filter="url(#wear)" d="M0 0h240v160H0z"/>
+</svg>

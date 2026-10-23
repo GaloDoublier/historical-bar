@@ -14,7 +14,12 @@ body {
   margin: 0;
   background: var(--color-ink);
   color: var(--color-paper);
+  cursor: url("/assets/cursors/western-arrow.png") 3 2, default;
   font-family: var(--font-saloon);
+}
+
+body * {
+  cursor: url("/assets/cursors/western-arrow.png") 3 2, default !important;
 }
 
 ::selection {
