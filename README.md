@@ -155,4 +155,6 @@ Main-menu verification on 2026-10-15:
 
 ## Current scope
 
+See the [PR overview, testing steps and screenshot gallery](docs/development/photo-puppet-chat-pr.md) for the integrated prototype.
+
 This PR integrates the existing menu and photo-puppet prototype. Further milestones require a separate request. Character data stays in this browser; source files retain metadata only, audio is independent from mock text, and skin reconstruction can show seams. See [prototype delivery notes](docs/development/puppet-prototype-delivery.md).
